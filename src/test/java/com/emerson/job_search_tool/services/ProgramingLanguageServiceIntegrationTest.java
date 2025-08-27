@@ -1,13 +1,11 @@
 package com.emerson.job_search_tool.services;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +62,11 @@ public class ProgramingLanguageServiceIntegrationTest {
             p.setCategory(ProgramingLanguageCategory.BACK_END);
             ProgramingLanguage existingProgramingLanguage = programingLanguageRepository.save(p);
             
-            ProgramingLanguageCreateDto dto = new ProgramingLanguageCreateDto(existingProgramingLanguage.getName(), "Front-End");            
+            ProgramingLanguageCreateDto dto = new ProgramingLanguageCreateDto(existingProgramingLanguage.getName(), "Front-End");  
+            
+            EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> programingLanguageService.save(dto));
 
-            Assertions.assertThrows(EntityAlreadyExistsException.class, () -> programingLanguageService.save(dto));
+            assertEquals(exception.getMessage(), "Already exists Programing Language " + existingProgramingLanguage.getName());
         }        
     }
 
@@ -86,7 +86,7 @@ public class ProgramingLanguageServiceIntegrationTest {
 
             List<ProgramingLanguageOutputDto> result = programingLanguageService.findAll();
 
-            Assertions.assertEquals(programingLanguages.size(), result.size());
+            assertEquals(programingLanguages.size(), result.size());
         }
     }
 
@@ -102,14 +102,17 @@ public class ProgramingLanguageServiceIntegrationTest {
 
             ProgramingLanguageOutputDto result = programingLanguageService.findById(programingLanguage.getId());
 
-            Assertions.assertNotNull(result);
+            assertNotNull(result);
         }
 
         @Test
         public void shouldThrowEntityNotFoundExceptionIfNotExistProgramingLanguageWithReceivedId() {
             UUID nonexistentId = UUID.randomUUID();
 
-            Assertions.assertThrows(EntityNotFoundException.class, () -> programingLanguageService.findById(nonexistentId));
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> programingLanguageService.findById(nonexistentId));
+
+            assertEquals(exception.getMessage(), "Programming language not found with id " + nonexistentId);
         }
     }
 
@@ -127,9 +130,20 @@ public class ProgramingLanguageServiceIntegrationTest {
 
             ProgramingLanguageOutputDto result = programingLanguageService.update(existingProgramingLanguage.getId(), programingLanguageCreateDto);
 
-            Assertions.assertEquals(result.id(), existingProgramingLanguage.getId());
-            Assertions.assertEquals(result.name(), existingProgramingLanguage.getName());
-            Assertions.assertEquals(result.category(), existingProgramingLanguage.getCategory().toString());
+            assertEquals(result.id(), existingProgramingLanguage.getId());
+            assertEquals(result.name(), existingProgramingLanguage.getName());
+            assertEquals(result.category(), existingProgramingLanguage.getCategory().toString());
+        }
+
+        @Test
+        public void shouldThrowEntityNotFoundExceptionWhenUpdateReciveNonExistentId() {
+            UUID nonexistentId = UUID.randomUUID();
+            ProgramingLanguageCreateDto programingLanguageCreateDto = new ProgramingLanguageCreateDto("New Name", "Front-End");
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> programingLanguageService.update(nonexistentId, programingLanguageCreateDto));
+
+            assertEquals(exception.getMessage(), "Programming language not found with id " + nonexistentId);
         }
     }
     
