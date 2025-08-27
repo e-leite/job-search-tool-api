@@ -1,7 +1,5 @@
 package com.emerson.job_search_tool.enums.converters;
 
-import java.util.stream.Stream;
-
 import com.emerson.job_search_tool.enums.ProgramingLanguageCategory;
 
 import jakarta.persistence.AttributeConverter;
@@ -23,10 +21,8 @@ public class ProgramingLanguageCategoryConverter implements AttributeConverter<P
         if(categoryName == null) {
             return null;
         }
-        return Stream.of(ProgramingLanguageCategory.values())
-            .filter(c -> c.toString().equals(categoryName))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Programing language category " + categoryName + " invalid."));            
+
+        return ProgramingLanguageCategory.fromDescription(categoryName);
     }
     
 }
