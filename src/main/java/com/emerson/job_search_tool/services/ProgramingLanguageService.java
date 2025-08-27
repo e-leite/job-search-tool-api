@@ -61,6 +61,12 @@ public class ProgramingLanguageService {
         return ProgramingLanguageMapper.toDto(programingLanguageRepository.save(programingLanguage));
     }
 
+    public void deleteById(UUID id) {
+        ProgramingLanguage programingLanguage = getProgramingLanguageByIdOrThrowEntityNotFoundException(id);
+        programingLanguageRepository.delete(programingLanguage);
+    }
+
+
     private ProgramingLanguage getProgramingLanguageByIdOrThrowEntityNotFoundException(UUID id) {
         return programingLanguageRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Programming language not found with id " + id));
