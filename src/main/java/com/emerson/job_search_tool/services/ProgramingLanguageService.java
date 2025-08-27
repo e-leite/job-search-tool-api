@@ -2,6 +2,7 @@ package com.emerson.job_search_tool.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import com.emerson.job_search_tool.exceptions.EntityAlreadyExistsException;
 import com.emerson.job_search_tool.mappers.ProgramingLanguageMapper;
 import com.emerson.job_search_tool.models.ProgramingLanguage;
 import com.emerson.job_search_tool.repositories.ProgramingLanguageRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProgramingLanguageService {
@@ -40,5 +43,12 @@ public class ProgramingLanguageService {
             .stream()
             .map(p -> ProgramingLanguageMapper.toDto(p))
             .collect(Collectors.toList());
+    }
+
+    public ProgramingLanguageOutputDto findById(UUID id) {
+        ProgramingLanguage programingLanguage = programingLanguageRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Already exists Programing Language with id " + id));
+
+        return ProgramingLanguageMapper.toDto(programingLanguage);
     }
 }
