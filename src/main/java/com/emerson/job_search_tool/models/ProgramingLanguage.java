@@ -1,7 +1,11 @@
 package com.emerson.job_search_tool.models;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.emerson.job_search_tool.commons.Auditable;
 import com.emerson.job_search_tool.enums.ProgramingLanguageCategory;
@@ -27,6 +31,12 @@ public class ProgramingLanguage extends Auditable implements Serializable {
     @Column(name = "name", unique = true, length = 30)
     private String name;    
     private ProgramingLanguageCategory category;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     public ProgramingLanguage() {
     }
