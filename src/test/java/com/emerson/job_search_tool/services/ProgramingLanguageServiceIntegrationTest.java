@@ -20,6 +20,7 @@ import com.emerson.job_search_tool.exceptions.EntityAlreadyExistsException;
 import com.emerson.job_search_tool.models.ProgramingLanguage;
 import com.emerson.job_search_tool.repositories.ProgramingLanguageRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -89,6 +90,27 @@ public class ProgramingLanguageServiceIntegrationTest {
         }
     }
 
-    
+    @Nested
+    class findById {
+
+        @Test
+        public void shouldReturnProgramingLanguageSuccessfuly() {
+            ProgramingLanguage p = new ProgramingLanguage();
+            p.setName(createRandomName());
+            p.setCategory(getCategoryRandon());
+            ProgramingLanguage programingLanguage = programingLanguageRepository.save(p);
+
+            ProgramingLanguageOutputDto result = programingLanguageService.findById(programingLanguage.getId());
+
+            Assertions.assertNotNull(result);
+        }
+
+        @Test
+        public void shouldThrowEntityNotFoundExceptionIfNotExistProgramingLanguageWithReceivedId() {
+            UUID nonexistentId = UUID.randomUUID();
+
+            Assertions.assertThrows(EntityNotFoundException.class, () -> programingLanguageService.findById(nonexistentId));
+        }
+    }
     
 }
