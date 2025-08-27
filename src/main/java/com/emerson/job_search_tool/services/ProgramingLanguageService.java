@@ -47,19 +47,22 @@ public class ProgramingLanguageService {
     }
 
     public ProgramingLanguageOutputDto findById(UUID id) {
-        ProgramingLanguage programingLanguage = programingLanguageRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("No Programming Language with id " + id + " was found."));
+        ProgramingLanguage programingLanguage = getProgramingLanguageByIdOrThrowEntityNotFoundException(id);
 
         return ProgramingLanguageMapper.toDto(programingLanguage);
-    }
+    }    
 
     public ProgramingLanguageOutputDto update(UUID id, ProgramingLanguageCreateDto programingLanguageCreateDto) {
-        ProgramingLanguage programingLanguage = programingLanguageRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Already exists Programing Language with id " + id));
+        ProgramingLanguage programingLanguage = getProgramingLanguageByIdOrThrowEntityNotFoundException(id);
 
         programingLanguage.setName(programingLanguageCreateDto.name());
         programingLanguage.setCategory(ProgramingLanguageCategory.fromDescription(programingLanguageCreateDto.category()));
 
         return ProgramingLanguageMapper.toDto(programingLanguageRepository.save(programingLanguage));
+    }
+
+    private ProgramingLanguage getProgramingLanguageByIdOrThrowEntityNotFoundException(UUID id) {
+        return programingLanguageRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Programming language not found with id " + id));
     }
 }
