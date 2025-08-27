@@ -91,7 +91,7 @@ public class ProgramingLanguageServiceIntegrationTest {
     }
 
     @Nested
-    class findById {
+    class FindByIdMethod {
 
         @Test
         public void shouldReturnProgramingLanguageSuccessfuly() {
@@ -110,6 +110,26 @@ public class ProgramingLanguageServiceIntegrationTest {
             UUID nonexistentId = UUID.randomUUID();
 
             Assertions.assertThrows(EntityNotFoundException.class, () -> programingLanguageService.findById(nonexistentId));
+        }
+    }
+
+    @Nested
+    class UpdateMethod {
+
+        @Test
+        public void shouldUpdateProgramingLanguageSuccessfuly() {            
+            ProgramingLanguage p = new ProgramingLanguage();
+            p.setName(createRandomName());
+            p.setCategory(ProgramingLanguageCategory.BACK_END);
+            ProgramingLanguage existingProgramingLanguage = programingLanguageRepository.save(p);
+
+            ProgramingLanguageCreateDto programingLanguageCreateDto = new ProgramingLanguageCreateDto("New Name", "Front-End");
+
+            ProgramingLanguageOutputDto result = programingLanguageService.update(existingProgramingLanguage.getId(), programingLanguageCreateDto);
+
+            Assertions.assertEquals(result.id(), existingProgramingLanguage.getId());
+            Assertions.assertEquals(result.name(), existingProgramingLanguage.getName());
+            Assertions.assertEquals(result.category(), existingProgramingLanguage.getCategory().toString());
         }
     }
     
