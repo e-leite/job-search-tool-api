@@ -3,6 +3,7 @@ package com.emerson.job_search_tool.models;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.emerson.job_search_tool.commons.Auditable;
 import com.emerson.job_search_tool.enums.ProgramingLanguageCategory;
 
 import jakarta.persistence.Column;
@@ -15,7 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "programing_language")
-public class ProgramingLanguage implements Serializable {
+public class ProgramingLanguage extends Auditable implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
