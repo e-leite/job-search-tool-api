@@ -147,4 +147,27 @@ public class ProgramingLanguageServiceIntegrationTest {
         }
     }
     
+    @Nested
+    class DeleteByIdMethod {
+
+        @Test
+        public void shouldDeleteProgramingLanguageWithSuccesss() {
+            ProgramingLanguage p = new ProgramingLanguage();
+            p.setName(createRandomName());
+            p.setCategory(getCategoryRandon());
+            ProgramingLanguage programingLanguage = programingLanguageRepository.save(p);
+
+            assertDoesNotThrow(() -> programingLanguageService.deleteById(programingLanguage.getId()));
+        }
+
+        @Test
+        public void shouldThrowEntityNotFoundExceptionWhenIdReceivedByDeleteNonexist() {
+            UUID nonexistentId = UUID.randomUUID();
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> programingLanguageService.deleteById(nonexistentId));
+
+            assertEquals(exception.getMessage(), "Programming language not found with id " + nonexistentId);
+        }
+    }
 }
