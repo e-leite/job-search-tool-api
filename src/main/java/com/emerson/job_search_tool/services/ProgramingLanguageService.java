@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.emerson.job_search_tool.dtos.ProgramingLanguageCreateDto;
 import com.emerson.job_search_tool.dtos.ProgramingLanguageOutputDto;
+import com.emerson.job_search_tool.enums.ProgramingLanguageCategory;
 import com.emerson.job_search_tool.exceptions.EntityAlreadyExistsException;
 import com.emerson.job_search_tool.mappers.ProgramingLanguageMapper;
 import com.emerson.job_search_tool.models.ProgramingLanguage;
@@ -47,8 +48,18 @@ public class ProgramingLanguageService {
 
     public ProgramingLanguageOutputDto findById(UUID id) {
         ProgramingLanguage programingLanguage = programingLanguageRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Already exists Programing Language with id " + id));
+            .orElseThrow(() -> new EntityNotFoundException("No Programming Language with id " + id + " was found."));
 
         return ProgramingLanguageMapper.toDto(programingLanguage);
+    }
+
+    public ProgramingLanguageOutputDto update(UUID id, ProgramingLanguageCreateDto programingLanguageCreateDto) {
+        ProgramingLanguage programingLanguage = programingLanguageRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Already exists Programing Language with id " + id));
+
+        programingLanguage.setName(programingLanguageCreateDto.name());
+        programingLanguage.setCategory(ProgramingLanguageCategory.fromDescription(programingLanguageCreateDto.category()));
+
+        return ProgramingLanguageMapper.toDto(programingLanguageRepository.save(programingLanguage));
     }
 }
