@@ -2,7 +2,10 @@ package com.emerson.job_search_tool.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -33,8 +36,14 @@ public class ProgramingLanguageServiceIntegrationTest {
         return UUID.randomUUID().toString().substring(12);
     }
 
+    private ProgramingLanguageCategory getCategoryRandon() {
+        ProgramingLanguageCategory[] categories = ProgramingLanguageCategory.values();
+        Random rand = new Random();
+        return categories[rand.nextInt(categories.length - 1)];        
+    }
+
     @Nested
-    class saveMethod {
+    class SaveMethod {
 
         @Test
         public void shouldCreateProgramingLanguageSuccessfuly() {
@@ -59,5 +68,27 @@ public class ProgramingLanguageServiceIntegrationTest {
             Assertions.assertThrows(EntityAlreadyExistsException.class, () -> programingLanguageService.save(dto));
         }        
     }
+
+    @Nested
+    class FindAllMethod {
+
+        @Test
+        public void shouldReturnAllProgramingLanguage() {
+            List<ProgramingLanguage> programingLanguages = IntStream.range(1, 7)
+                .mapToObj(n -> {
+                    ProgramingLanguage p = new ProgramingLanguage();
+                    p.setName(createRandomName());
+                    p.setCategory(getCategoryRandon());
+                    return programingLanguageRepository.save(p);
+
+                }).toList();
+
+            List<ProgramingLanguageOutputDto> result = programingLanguageService.findAll();
+
+            Assertions.assertEquals(programingLanguages.size(), result.size());
+        }
+    }
+
+    
     
 }
