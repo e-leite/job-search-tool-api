@@ -1,6 +1,8 @@
 package com.emerson.job_search_tool.services;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -31,5 +33,12 @@ public class ProgramingLanguageService {
 
         ProgramingLanguage programingLanguage = ProgramingLanguageMapper.toEntity(programingLanguageCreateDto);
         return ProgramingLanguageMapper.toDto(this.programingLanguageRepository.save(programingLanguage));
-    }    
+    }
+    
+    public List<ProgramingLanguageOutputDto> findAll() {
+        return programingLanguageRepository.findAll()
+            .stream()
+            .map(p -> ProgramingLanguageMapper.toDto(p))
+            .collect(Collectors.toList());
+    }
 }
