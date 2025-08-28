@@ -74,5 +74,13 @@ public class ProgramingLanguage extends Auditable implements Serializable {
 
     public void setCategory(ProgramingLanguageCategory category) {
         this.category = category;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }    
 }
