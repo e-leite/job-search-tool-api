@@ -2,6 +2,8 @@ package com.emerson.job_search_tool.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -9,11 +11,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import com.emerson.job_search_tool.commons.Auditable;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -29,6 +33,9 @@ public class SkillCategory extends Auditable implements Serializable {
     @NotBlank(message = "Name is mandatory.")
     @Column(name = "name", length = 70, nullable = false, unique = true)
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "skillCategory")
+    private Set<SkillSubcategory> subcategory = new HashSet<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -71,4 +78,13 @@ public class SkillCategory extends Auditable implements Serializable {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    public Set<SkillSubcategory> getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(Set<SkillSubcategory> subcategory) {
+        this.subcategory = subcategory;
+    }
+    
 }
