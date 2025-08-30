@@ -1,6 +1,5 @@
 package com.emerson.job_search_tool.mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
