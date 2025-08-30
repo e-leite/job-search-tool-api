@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emerson.job_search_tool.dtos.SkillCategoryCreateDto;
-import com.emerson.job_search_tool.models.SkillCategory;
+import com.emerson.job_search_tool.dtos.SkillCategoryOutputDto;
 import com.emerson.job_search_tool.services.SkillCategoryService;
 
 import jakarta.validation.Valid;
@@ -31,22 +31,22 @@ public class SkillCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<SkillCategory> save(@RequestBody @Valid SkillCategoryCreateDto skillCategoryCreateDto) {
+    public ResponseEntity<SkillCategoryOutputDto> save(@RequestBody @Valid SkillCategoryCreateDto skillCategoryCreateDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(skillCategoryService.save(skillCategoryCreateDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<SkillCategory>> findAll() {
+    public ResponseEntity<List<SkillCategoryOutputDto>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(skillCategoryService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SkillCategory> findById(@PathVariable UUID id) {
+    public ResponseEntity<SkillCategoryOutputDto> findById(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(skillCategoryService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SkillCategory> update(@PathVariable UUID id, @RequestBody @Valid SkillCategoryCreateDto skillCategoryCreateDto) {
+    public ResponseEntity<SkillCategoryOutputDto> update(@PathVariable UUID id, @RequestBody @Valid SkillCategoryCreateDto skillCategoryCreateDto) {
         return ResponseEntity.status(HttpStatus.OK).body(skillCategoryService.update(id, skillCategoryCreateDto));
     }
 

@@ -3,11 +3,14 @@ package com.emerson.job_search_tool.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.emerson.job_search_tool.dtos.SkillCategoryCreateDto;
+import com.emerson.job_search_tool.dtos.SkillCategoryOutputDto;
 import com.emerson.job_search_tool.exceptions.EntityAlreadyExistsException;
+import com.emerson.job_search_tool.mappers.SkillCategoryMapper;
 import com.emerson.job_search_tool.models.SkillCategory;
 import com.emerson.job_search_tool.repositories.SkillCategoryRepository;
 
@@ -22,30 +25,33 @@ public class SkillCategoryService {
         this.skillCategoryRepository = skillCategoryRepository;
     }
 
-    public SkillCategory save(SkillCategoryCreateDto skillCategoryCreateDto) {
+    public SkillCategoryOutputDto save(SkillCategoryCreateDto skillCategoryCreateDto) {
 
         throwEntityAlreadyExistsExceptionIfExistsSkillCategoryWithReceivedName(skillCategoryCreateDto.name());
         SkillCategory skillCategory = new SkillCategory();
         skillCategory.setName(skillCategoryCreateDto.name());
 
-        return skillCategoryRepository.save(skillCategory);
+        return SkillCategoryMapper.toDto(skillCategoryRepository.save(skillCategory));
     }    
     
-    public List<SkillCategory> findAll() {
-        return skillCategoryRepository.findAll();
+    public List<SkillCategoryOutputDto> findAll() {
+        return skillCategoryRepository.findAll()
+            .stream()
+            .map(s -> SkillCategoryMapper.toDto(s))
+            .collect(Collectors.toList());
     }
 
-    public SkillCategory findById(UUID id) {
-        return getSkillCategoryByIdOrElseThrowEntityNotFoundException(id);
+    public SkillCategoryOutputDto findById(UUID id) {
+        return SkillCategoryMapper.toDto(getSkillCategoryByIdOrElseThrowEntityNotFoundException(id));
     }
 
-    public SkillCategory update(UUID id, SkillCategoryCreateDto skillCategoryCreateDto) {
+    public SkillCategoryOutputDto update(UUID id, SkillCategoryCreateDto skillCategoryCreateDto) {
 
         this.throwEntityAlreadyExistsExceptionIfExistsSkillCategoryWithReceivedName(skillCategoryCreateDto.name());
         
         SkillCategory skillCategory = this.getSkillCategoryByIdOrElseThrowEntityNotFoundException(id);
         skillCategory.setName(skillCategoryCreateDto.name());
-        return this.skillCategoryRepository.save(skillCategory);
+        return SkillCategoryMapper.toDto(this.skillCategoryRepository.save(skillCategory));
     }
 
     public void deleteById(UUID id) {
