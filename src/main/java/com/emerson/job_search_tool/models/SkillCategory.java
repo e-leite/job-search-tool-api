@@ -37,6 +37,9 @@ public class SkillCategory extends Auditable implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "skillCategory")
     private Set<SkillSubcategory> subcategory = new HashSet<>();
 
+    @OneToMany(mappedBy = "skillCategory")
+    private Set<Skill> skill = new HashSet<>();
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -86,5 +89,12 @@ public class SkillCategory extends Auditable implements Serializable {
     public void setSubcategory(Set<SkillSubcategory> subcategory) {
         this.subcategory = subcategory;
     }
-    
+
+    public Set<Skill> getSkill() {
+        return skill;
+    }
+
+    public void setSkill(Set<Skill> skill) {
+        this.skill = skill;
+    }    
 }
