@@ -18,8 +18,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "tb_enterprise")
-public class Enterprise extends Auditable implements Serializable {
+@Table(name = "tb_companies")
+public class Company extends Auditable implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -51,10 +51,10 @@ public class Enterprise extends Auditable implements Serializable {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Enterprise() {
+    public Company() {
     }
 
-    public Enterprise(UUID id, @NotBlank(message = "Name is mandatory.") String name, String overview, String site,
+    public Company(UUID id, @NotBlank(message = "Name is mandatory.") String name, String overview, String site,
             String industry, String companySize, Integer foundationYear) {
         this.id = id;
         this.name = name;
